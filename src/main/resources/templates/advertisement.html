@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+
+</head>
+
+
+<body>
+<div th:include="common.html"></div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-inline" role="form" style="float:left;" action="/permission/user">
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <div class="input-group-addon">查询条件</div>
+                        <input class="form-control has-success" id="queryText" type="text"
+                               placeholder="请输入查询条件">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-warning" id="queryButton"><i
+                        class="glyphicon glyphicon-search"></i> 查询
+                </button>
+            </form>
+            <button type="button" class="btn btn-danger" onclick="deleteAds()"
+                    style="float:right;margin-left:10px;"><i
+                    class=" glyphicon glyphicon-remove"></i> 删除
+            </button>
+            <button type="button" class="btn btn-primary" style="float:right;"
+                    onclick="usemodal()"><i
+                    class="glyphicon glyphicon-plus"></i> 新增
+            </button>
+            <br>
+            <hr style="clear:both;">
+            <div class="table-responsive">
+                <form id="userMsg">
+                    <table class="table  table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="30">#</th>
+                            <th width="30"><input type="checkbox" id="selectAll"></th>
+                            <th>广告描述</th>
+                            <th>状态</th>
+                            <th width="100">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="userData">
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="6" align="center">
+                                <ul class="pagination" id="pagin">
+
+                                </ul>
+                            </td>
+                        </tr>
+
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<!--<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">-->
+<!--<div class="panel panel-default">-->
+<!--<div class="panel-heading">-->
+<!--<h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>-->
+<!--</div>-->
+<!--<div class="panel-body">-->
+<!--<form class="form-inline" role="form" style="float:left;">-->
+<!--<div class="form-group has-feedback">-->
+<!--<div class="input-group">-->
+<!--<div class="input-group-addon">查询条件</div>-->
+<!--<input class="form-control has-success" type="text" placeholder="请输入查询条件">-->
+<!--</div>-->
+<!--</div>-->
+<!--<button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>-->
+<!--</form>-->
+<!--<button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i-->
+<!--class=" glyphicon glyphicon-remove"></i> 删除-->
+<!--</button>-->
+<!--<button type="button" class="btn btn-primary" style="float:right;"-->
+<!--onclick="window.location.href='form.html'"><i class="glyphicon glyphicon-plus"></i> 新增-->
+<!--</button>-->
+<!--<br>-->
+<!--<hr style="clear:both;">-->
+<!--<div class="table-responsive">-->
+<!--<table class="table  table-bordered">-->
+<!--<thead>-->
+<!--<tr>-->
+<!--<th width="30">#</th>-->
+<!--<th>广告描述</th>-->
+<!--<th>状态</th>-->
+<!--<th width="100">操作</th>-->
+<!--</tr>-->
+<!--</thead>-->
+<!--<tbody>-->
+<!--<tr>-->
+<!--<td>1</td>-->
+<!--<td>XXXXXXXXXXXX商品广告</td>-->
+<!--<td>未审核</td>-->
+<!--<td>-->
+<!--<button type="button" class="btn btn-success btn-xs"><i-->
+<!--class="glyphicon glyphicon-check"></i></button>-->
+<!--<button type="button" class="btn btn-primary btn-xs"><i-->
+<!--class="glyphicon glyphicon-pencil"></i></button>-->
+<!--<button type="button" class="btn btn-danger btn-xs"><i-->
+<!--class="glyphicon glyphicon-remove"></i></button>-->
+<!--</td>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<td>2</td>-->
+<!--<td>XXXXXXXXXXXX商品广告</td>-->
+<!--<td>已发布</td>-->
+<!--<td>-->
+<!--<button type="button" class="btn btn-success btn-xs"><i-->
+<!--class="glyphicon glyphicon-eye-open"></i></button>-->
+<!--<button type="button" class="btn btn-primary btn-xs"><i-->
+<!--class="glyphicon glyphicon-pencil"></i></button>-->
+<!--<button type="button" class="btn btn-danger btn-xs"><i-->
+<!--class="glyphicon glyphicon-remove"></i></button>-->
+<!--</td>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<td>3</td>-->
+<!--<td>XXXXXXXXXXXX商品广告</td>-->
+<!--<td>审核中</td>-->
+<!--<td>-->
+<!--<button type="button" class="btn btn-success btn-xs"><i-->
+<!--class="glyphicon glyphicon-eye-open"></i></button>-->
+<!--<button type="button" class="btn btn-primary btn-xs"><i-->
+<!--class="glyphicon glyphicon-pencil"></i></button>-->
+<!--<button type="button" class="btn btn-danger btn-xs"><i-->
+<!--class="glyphicon glyphicon-remove"></i></button>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--<tfoot>-->
+<!--<tr>-->
+<!--<td colspan="4" align="center">-->
+<!--<ul class="pagination">-->
+<!--<li class="disabled"><a href="#">上一页</a></li>-->
+<!--<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>-->
+<!--<li><a href="#">2</a></li>-->
+<!--<li><a href="#">3</a></li>-->
+<!--<li><a href="#">4</a></li>-->
+<!--<li><a href="#">5</a></li>-->
+<!--<li><a href="#">下一页</a></li>-->
+<!--</ul>-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</tfoot>-->
+<!--</table>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<form role="form" id="userForm" enctype="multipart/form-data"><!--传输文件时form表单的类型-->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="ModalLabel1">添加广告</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>广告名称</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="请输入权限名称">
+                    </div>
+                    <div class="form-group">
+                        <label>选择图片</label>
+                        <input type="file" id="file" name="file">
+                    </div>
+                    <div class="form-group">
+
+                    </div>
+                    <button type="button" class="btn btn-danger" id="resetButton"><i
+                            class="glyphicon glyphicon-refresh"></i> 重置
+                    </button>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addAdDo()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form role="form" id="userForm1">
+    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">修改名称</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="name">广告名称</label>
+                        <input type="text" class="form-control" id="name1" name="name" placeholder="请输入权限名称">
+                        <input type="hidden" id="adid" name="id">
+                    </div>
+                    <button type="button" class="btn btn-danger" id="resetButton1"><i
+                            class="glyphicon glyphicon-refresh"></i> 重置
+                    </button>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="editAdDo()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="/static/jquery/jquery-2.1.1.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/script/docs.min.js"></script>
+<script src="/static/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+
+        $("body").on("click", ".showimg", function () {
+            var url = $(this).attr("url");
+            // alert(url)
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['440px', '295px'], //宽高
+                content: '<img style="height:240px; width: 420px" src="' + url + '">'
+            });
+        })
+
+        pageQuery(1);//页面加载完后首先加载第一页
+        likeFlag = false;
+
+        $("#queryButton").click(function () {
+            var queryText = $("#queryText").val();
+            if (queryText == "") {
+                likeFlag = false;
+            } else {
+                likeFlag = true;
+            }
+            pageQuery(1);
+        })
+    });
+
+    $("tbody .btn-success").click(function () {
+        window.location.href = "assignPermission.html";
+    });
+
+    $("#selectAll").click(function () {
+        if (this.checked) {
+            $("#userData :checkbox").prop("checked", true);//prop() 方法设置或返回被选元素的属性和值。
+        } else {//遍历
+            $("#userData :checkbox").prop("checked", false);
+        }
+    });//jquery对象使用prop方法
+
+    // function select(id) {
+    //     var uid = "td" + id;
+    //     var check = document.getElementById(uid);//动态获取ID;
+    //     // alert(check.checked);
+    //     if (check.checked) {
+    //         check.checked = false;//prop() 方法设置或返回被选元素的属性和值。
+    //     } else {//遍历
+    //         check.checked = true;
+    //     }
+    // }//dom对象使用该方法
+
+    function editAd(id, name) {//由onclick的得到
+
+        var options = {
+            backdrop: 'static',
+            show: true,
+        }
+        $("#adid").val(id);
+        $("#name1").val(name);
+        $("#modal1").modal(options);
+
+    }//通过JS的方法调用模态框
+
+    function usemodal(id) {
+        var options = {
+            backdrop: 'static',
+            show: true,
+        }
+        $("#pid").val(id);
+        $("#modal").modal(options);
+    }//通过JS的方法调用模态框
+
+    $("#resetButton").click(function () {
+        $("#userForm")[0].reset();
+        // dom对象中提供了reset方法
+        $("#file").val("");//清空选择项
+    })
+    $("#resetButton1").click(function () {
+        $("#userForm1")[0].reset();
+        // dom对象中提供了reset方法
+    })
+
+    $("#file").change(function (event) {
+        var files = event.target.files;//前台获取文件对象
+        var file;
+        if (files && files.length > 0) {
+            file = files[0];
+        }
+        var match = /image*///表示image类型
+        if (!match.test(file.type)) {//利用jstest方法来判断是否匹配
+            alert("请选择图片！");
+            $("#file").val("");//清空选择项
+        } else {
+            var url = window.URL;
+            var imgUrl = url.createObjectURL(file);//为图片创建一个临时地址
+            $("#file").parent(".form-group").next(".form-group").html('<img src="' + imgUrl + '" style="height:240px; width: 420px">')
+        }//这里使用html（），因为只有一个文件，所以每次需要格式化
+    })
+
+    function deleteAds() {
+        var box = $("input[type='checkbox']:checked");
+        if (box.length == 0) {//判断复选框中的值有多少个
+            layer.msg("没有选择数据，请重新选择！", {time: 2000, icon: 5, shift: 6}, function () {
+            })
+        } else {
+            layer.confirm("确定删除这些广告吗？", {icon: 3, title: '提示'}, function (cindex) {//双引号
+                $.ajax({
+                    type: "POST",
+                    url: "deleteAdsDo",
+                    data: $("#userMsg").serialize(),//表单序列化
+                    success: function (ajaxResult) {
+                        if (ajaxResult.success) {
+                            layer.alert("删除成功！", function (index) {
+                                window.location.href = "admanage";
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.alert("删除失败！", function (index) {
+                                layer.close(index);
+                            });
+                        }
+                    }
+                })
+                layer.close(cindex);//点击确定时执行的方法
+            }, function (cindex) {
+                layer.close(cindex);
+            });
+        }
+    }
+
+    function addAdDo() {
+        // alert(new FormData($("#userForm")[0]))
+        $.ajax({
+            type: "post",
+            url: "addAdDo",
+            data: new FormData($("#userForm")[0]),//提交所有数据
+            processData: false,//不需要处理和编码********
+            contentType: false,//不使用默认的内容类型***********
+            success: function (ajaxResult) {
+                if (ajaxResult.success) {
+                    layer.msg("上传成功！", {time: 2000, icon: 1, shift: 6}, function () {
+                        window.location.href = "admanage";
+                    })
+                } else {
+                    layer.msg("上传失败！", {time: 2000, icon: 5, shift: 6}, function () {
+                    })
+                }
+            }
+        })
+
+    }
+
+    function deleteRole(id, name) {
+        layer.confirm("确定删除【" + name + "】吗？", {icon: 3, title: '提示'}, function (cindex) {//双引号
+            $.ajax({
+                type: "POST",
+                url: "deleteAdDo",
+                data: {"id": id},
+                success: function (ajaxResult) {
+                    if (ajaxResult.success) {
+                        layer.alert("删除成功！", function (index) {
+                            window.location.href = "admanage";
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.alert("删除失败！", function (index) {
+                            layer.close(index);
+                        });
+                    }
+                }
+            })
+            layer.close(cindex);//点击确定时执行的方法
+        }, function (cindex) {
+            layer.close(cindex);
+        });
+
+    }
+
+    function editAdDo() {
+        var name = $("#name1").val();
+        var id = $("#adid").val();
+        $.ajax({
+            type: "post",
+            url: "editAdDo",
+            data: {
+                "name": name,
+                "id": id,
+            },
+            success: function (ajaxResult) {
+                if (ajaxResult.success) {
+                    layer.alert("修改成功！", function (index) {
+                        window.location.href = "admanage";
+                        layer.close(index);
+                    });
+                } else {
+                    layer.alert("删除失败！", function (index) {
+                        layer.close(index);
+                    });
+                }
+            }
+        })
+    }
+
+    //分页查询
+    function pageQuery(pageNo) {
+        var loadingIndex = null;
+        var queryText = $("#queryText").val();
+        var jasonData = {"pageNo": pageNo, "pageNum": 5};
+        if (likeFlag = true) {
+            jasonData.queryText = queryText;
+        }
+        $.ajax({
+            type: "POST",
+            url: "adQueryDo",
+            data: jasonData,
+            beforeSend: function () {
+                loadingIndex = layer.msg('处理中', {icon: 16});
+            },
+            success: function (ajaxResult) {
+                layer.close(loadingIndex)
+                if (ajaxResult.success) {//当成功时应该局部刷新页面
+                    var pageContent = "";
+                    var tableContent = "";//一个是表的内容一个是分页的内容
+
+                    var rolePage = ajaxResult.object;//分页对象就等于我结果集中的data属性
+                    var roles = rolePage.object;//用户对象就相当于分页对象中的object属性
+
+                    $.each(roles, function (i, role) {//一个是当前索引。一个是当前对象
+                        tableContent += ' <tr>';
+                        tableContent += '   <td>' + (i + 1) + '</td>';
+                        tableContent += '   <td><input type="checkbox" id="td' + role.id + '"  name="roleid" value="' + role.id + '"></td>';
+                        tableContent += '       <td>' + role.name + '</td>';
+                        tableContent += '       <td>' + role.state + '</td>';
+                        tableContent += '       <td>';
+                        tableContent += '       <button type="button" class="btn btn-success btn-xs showimg" url="' + role.img + '" ><i class=" glyphicon glyphicon-sunglasses"></i></button>';
+                        tableContent += '   <button type="button" class="btn btn-primary btn-xs" onclick="editAd(' + role.id + ', \'' + role.name + '\')"><i class=" glyphicon glyphicon-pencil"></i></button>';
+                        tableContent += '   <button type="button" class="btn btn-danger btn-xs" onclick="deleteRole(' + role.id + ',\'' + role.name + '\')"><i class=" glyphicon glyphicon-remove"></i></button>';
+                        tableContent += '   </td>';//‘+user.id+’,/' '+user.loginaccount+' /'
+                        tableContent += ' </tr>';
+                    });
+                    if (pageNo > 1) {
+                        pageContent += '<li><a href="#" onclick="pageQuery(' + (pageNo - 1) + ')">上一页</a></li>';
+                    }
+                    for (var i = 1; i <= rolePage.maxpageNo; i++) {
+                        if (pageNo == i) {
+                            pageContent += '<li class="active"><a href="#">' + i + '</a></li>';
+                        } else {
+                            pageContent += '<li><a href="#" onclick="pageQuery(' + i + ')">' + i + '</a></li>';
+                        }
+                    }
+                    if (pageNo < rolePage.maxpageNo) {
+                        pageContent += '<li><a href="#" onclick="pageQuery(' + (pageNo + 1) + ')">下一页</a></li>';
+                    }
+
+                    $("#userData").html(tableContent);
+                    $("#pagin").html(pageContent);//内容为空需要添加我们新增的内容
+                }
+                else {
+                    layer.msg("查询失败", {time: 2000, icon: 5, shift: 6}, function () {
+                    })
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

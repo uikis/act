@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+
+</head>
+
+<body>
+<div th:include="common.html"></div>
+<!--<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">-->
+<!--<div class="container-fluid">-->
+<!--<div class="navbar-header">-->
+<!--<div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>-->
+<!--</div>-->
+<!--<div id="navbar" class="navbar-collapse collapse">-->
+<!--<ul class="nav navbar-nav navbar-right">-->
+<!--<li style="padding-top:8px;">-->
+<!--<div class="btn-group">-->
+<!--<button type="button" class="btn btn-default btn-success dropdown-toggle"-->
+<!--data-toggle="dropdown">-->
+<!--<i class="glyphicon glyphicon-user">[[${session.user.getLoginaccount()}]]</i> <span-->
+<!--class="caret"></span>-->
+<!--</button>-->
+<!--<ul class="dropdown-menu" role="menu">-->
+<!--<li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>-->
+<!--<li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>-->
+<!--<li class="divider"></li>-->
+<!--<li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>-->
+<!--</ul>-->
+<!--</div>-->
+<!--</li>-->
+<!--<li style="margin-left:10px;padding-top:8px;">-->
+<!--<button type="button" class="btn btn-default btn-danger">-->
+<!--<span class="glyphicon glyphicon-question-sign"></span> 帮助-->
+<!--</button>-->
+<!--</li>-->
+<!--</ul>-->
+<!--<form class="navbar-form navbar-right">-->
+<!--<input type="text" class="form-control" placeholder="Search...">-->
+<!--</form>-->
+<!--</div>-->
+<!--</div>-->
+<!--</nav>-->
+
+<!--<div class="container-fluid">-->
+<!--<div class="row">-->
+<!--<div class="col-sm-3 col-md-2 sidebar">-->
+<!--<div class="tree">-->
+<!--<ul style="padding-left:0px;" class="list-group">-->
+<!--<li class="list-group-item tree-closed">-->
+<!--<a href="/main"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>-->
+<!--</li>-->
+<!--<li class="list-group-item">-->
+<!--<span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge"-->
+<!--style="float:right">3</span></span>-->
+<!--<ul style="margin-top:10px;">-->
+<!--<li style="height:30px;">-->
+<!--<a href="/act/user" ><i class="glyphicon glyphicon-user"></i>-->
+<!--用户维护</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="/act/role" style="color:red;"><i class="glyphicon glyphicon-king"></i> 角色维护</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="/act/act"><i class="glyphicon glyphicon-lock"></i> 许可维护</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--</li>-->
+<!--<li class="list-group-item tree-closed">-->
+<!--<span><i class="glyphicon glyphicon-ok"></i> 业务审核 <span class="badge"-->
+<!--style="float:right">3</span></span>-->
+<!--<ul style="margin-top:10px;display:none;">-->
+<!--<li style="height:30px;">-->
+<!--<a href="auth_cert.html"><i class="glyphicon glyphicon-check"></i> 实名认证审核</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="auth_adv.html"><i class="glyphicon glyphicon-check"></i> 广告审核</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="auth_project.html"><i class="glyphicon glyphicon-check"></i> 项目审核</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--</li>-->
+<!--<li class="list-group-item tree-closed">-->
+<!--<span><i class="glyphicon glyphicon-th-large"></i> 业务管理 <span class="badge" style="float:right">7</span></span>-->
+<!--<ul style="margin-top:10px;display:none;">-->
+<!--<li style="height:30px;">-->
+<!--<a href="cert.html"><i class="glyphicon glyphicon-picture"></i> 资质维护</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="type.html"><i class="glyphicon glyphicon-equalizer"></i> 分类管理</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="process.html"><i class="glyphicon glyphicon-random"></i> 流程管理</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="advertisement.html"><i class="glyphicon glyphicon-hdd"></i> 广告管理</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="message.html"><i class="glyphicon glyphicon-comment"></i> 消息模板</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="project_type.html"><i class="glyphicon glyphicon-list"></i> 项目分类</a>-->
+<!--</li>-->
+<!--<li style="height:30px;">-->
+<!--<a href="tag.html"><i class="glyphicon glyphicon-tags"></i> 项目标签</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--</li>-->
+<!--<li class="list-group-item tree-closed">-->
+<!--<a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 参数管理</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--</div>-->
+<!--</div>-->
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-inline" role="form" style="float:left;" action="/permission/user">
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <div class="input-group-addon">查询条件</div>
+                        <input class="form-control has-success" id="queryText" type="text"
+                               placeholder="请输入查询条件">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-warning" id="queryButton"><i
+                        class="glyphicon glyphicon-search"></i> 查询
+                </button>
+            </form>
+            <button type="button" class="btn btn-danger" onclick="deleteRoles()"
+                    style="float:right;margin-left:10px;"><i
+                    class=" glyphicon glyphicon-remove"></i> 删除
+            </button>
+            <button type="button" class="btn btn-primary" style="float:right;"
+                    onclick="window.location.href='/permission/roleadd'"><i
+                    class="glyphicon glyphicon-plus"></i> 新增
+            </button>
+            <br>
+            <hr style="clear:both;">
+            <div class="table-responsive">
+                <form id="userMsg">
+                    <table class="table  table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="30">#</th>
+                            <th width="30"><input type="checkbox" id="selectAll"></th>
+                            <th>名称</th>
+                            <th width="100">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="userData">
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="6" align="center">
+                                <ul class="pagination" id="pagin">
+
+                                </ul>
+                            </td>
+                        </tr>
+
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<script src="/static/jquery/jquery-2.1.1.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/script/docs.min.js"></script>
+<script src="/static/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+
+        pageQuery(1);//页面加载完后首先加载第一页
+        likeFlag = false;
+
+        $("#queryButton").click(function () {
+            var queryText = $("#queryText").val();
+            if (queryText == "") {
+                likeFlag = false;
+            } else {
+                likeFlag = true;
+            }
+            pageQuery(1);
+        })
+    });
+
+    $("tbody .btn-success").click(function () {
+        window.location.href = "assignPermission.html";
+    });
+
+    $("#selectAll").click(function () {
+        if (this.checked) {
+            $("#userData :checkbox").prop("checked", true);//prop() 方法设置或返回被选元素的属性和值。
+        } else {//遍历
+            $("#userData :checkbox").prop("checked", false);
+        }
+    });//jquery对象使用prop方法
+
+    // function select(id) {
+    //     var uid = "td" + id;
+    //     var check = document.getElementById(uid);//动态获取ID;
+    //     // alert(check.checked);
+    //     if (check.checked) {
+    //         check.checked = false;//prop() 方法设置或返回被选元素的属性和值。
+    //     } else {//遍历
+    //         check.checked = true;
+    //     }
+    // }//dom对象使用该方法
+
+    function updateRole(id) {
+        window.location.href = "editroles?id=" + id;
+    }
+
+    function assignPermission(id) {
+        window.location.href = "assign?id=" + id;
+    }
+
+    function deleteRoles() {
+        var box = $("input[type='checkbox']:checked");
+        if (box.length == 0) {//判断复选框中的值有多少个
+            layer.msg("没有选择数据，请重新选择！", {time: 2000, icon: 5, shift: 6}, function () {
+            })
+        } else {
+            layer.confirm("确定删除这些角色吗？", {icon: 3, title: '提示'}, function (cindex) {//双引号
+                $.ajax({
+                    type: "POST",
+                    url: "deleteRolesDo",
+                    data: $("#userMsg").serialize(),//表单序列化
+                    success: function (ajaxResult) {
+                        if (ajaxResult.success) {
+                            layer.alert("删除成功！", function (index) {
+                                window.location.href = "/permission/role";
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.alert("删除失败！", function (index) {
+                                layer.close(index);
+                            });
+                        }
+                    }
+                })
+                layer.close(cindex);//点击确定时执行的方法
+            }, function (cindex) {
+                layer.close(cindex);
+            });
+        }
+    }
+
+    //分页查询
+    function pageQuery(pageNo) {
+        var loadingIndex = null;
+        var queryText = $("#queryText").val();
+        var jasonData = {"pageNo": pageNo, "pageNum": 5};
+        if (likeFlag = true) {
+            jasonData.queryText = queryText;
+        }
+        $.ajax({
+            type: "POST",
+            url: "roleQueryDo",
+            data: jasonData,
+            beforeSend: function () {
+                loadingIndex = layer.msg('处理中', {icon: 16});
+            },
+            success: function (ajaxResult) {
+                layer.close(loadingIndex)
+                if (ajaxResult.success) {//当成功时应该局部刷新页面
+                    var pageContent = "";
+                    var tableContent = "";//一个是表的内容一个是分页的内容
+
+                    var rolePage = ajaxResult.object;//分页对象就等于我结果集中的data属性
+                    var roles = rolePage.object;//用户对象就相当于分页对象中的object属性
+
+                    $.each(roles, function (i, role) {//一个是当前索引。一个是当前对象
+                        tableContent += ' <tr>';
+                        tableContent += '   <td>' + (i + 1) + '</td>';
+                        tableContent += '   <td><input type="checkbox" id="td' + role.id + '"  name="roleid" value="' + role.id + '"></td>';
+                        tableContent += '       <td>' + role.name + '</td>';
+                        tableContent += '       <td>';
+                        tableContent += '       <button type="button" class="btn btn-success btn-xs" onclick="assignPermission(' + role.id + ')"><i class=" glyphicon glyphicon-check assignBtn"></i></button>';
+                        tableContent += '   <button type="button" class="btn btn-primary btn-xs" onclick="updateRole(' + role.id + ')"><i class=" glyphicon glyphicon-pencil"></i></button>';
+                        tableContent += '   <button type="button" class="btn btn-danger btn-xs" onclick="deleteRole(' + role.id + ',\'' + role.name + '\')"><i class=" glyphicon glyphicon-remove"></i></button>';
+                        tableContent += '   </td>';//‘+user.id+’,/' '+user.loginaccount+' /'
+                        tableContent += ' </tr>';
+                    });
+                    if (pageNo > 1) {
+                        pageContent += '<li><a href="#" onclick="pageQuery(' + (pageNo - 1) + ')">上一页</a></li>';
+                    }
+                    for (var i = 1; i <= rolePage.maxpageNo; i++) {
+                        if (pageNo == i) {
+                            pageContent += '<li class="active"><a href="#">' + i + '</a></li>';
+                        } else {
+                            pageContent += '<li><a href="#" onclick="pageQuery(' + i + ')">' + i + '</a></li>';
+                        }
+                    }
+                    if (pageNo < rolePage.maxpageNo) {
+                        pageContent += '<li><a href="#" onclick="pageQuery(' + (pageNo + 1) + ')">下一页</a></li>';
+                    }
+
+                    $("#userData").html(tableContent);
+                    $("#pagin").html(pageContent);//内容为空需要添加我们新增的内容
+                }
+                else {
+                    layer.msg("查询失败", {time: 2000, icon: 5, shift: 6}, function () {
+                    })
+                }
+            }
+        })
+    }
+
+    function deleteRole(id, name) {
+        layer.confirm("确定删除【" + name + "】吗？", {icon: 3, title: '提示'}, function (cindex) {//双引号
+            $.ajax({
+                type: "POST",
+                url: "deleteRoleDo",
+                data: {"id": id},
+                success: function (ajaxResult) {
+                    if (ajaxResult.success) {
+                        layer.alert("删除成功！", function (index) {
+                            window.location.href = "/permission/role";
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.alert("删除失败！", function (index) {
+                            layer.close(index);
+                        });
+                    }
+                }
+            })
+            layer.close(cindex);//点击确定时执行的方法
+        }, function (cindex) {
+            layer.close(cindex);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keys" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <style>
+
+    </style>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" href="index.html" style="font-size:32px;">商城入口</a></div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <form class="form-signin" role="form">
+        <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
+        <div class="form-group has-success has-feedback">
+            <input type="text" class="form-control" id="loginaccount" name="loginaccount" placeholder="请输入登录账号"
+                   autofocus>
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-success has-feedback">
+            <input type="password" class="form-control" id="password" name="password" placeholder="请输入登录密码"
+                   style="margin-top:10px;">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="0" name="rmbUser" id="rmbUser"> 自动登录
+            </label>
+            <br>
+            <label>
+                <a href="forgetPwd">忘记密码</a>
+            </label>
+            <label style="float:right">
+                <a href="regist">我要注册</a>
+            </label>
+        </div>
+        <a class="btn btn-lg btn-success btn-block" onclick="dologin()"> 登录</a>
+    </form>
+</div>
+<script src="/static/jquery/jquery-2.1.1.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/layer/layer.js"></script>
+<script>
+    function dologin() {
+        // var type = $(":selected").val();//下拉框的选项
+        var loginaccount = $("#loginaccount").val();//获得用户名的值
+        var password = $("#password").val();
+        var flag = $("#rmbUser").val()
+        if ($("#rmbUser")[0].checked) {
+            flag = 1
+        }//判断是否勾选记住我
+        if (loginaccount == "") {
+            layer.msg("用户名不能为空，请重新输入！", {time: 2000, icon: 5, shift: 6}, function () {
+            });
+            return;
+        }
+        if (password == "") {
+            layer.msg("密码不能为空，请重新输入！", {time: 2000, icon: 5, shift: 6}, function () {
+            });
+            return;//运行异常直接终止程序
+        }//页面的请求不可能为null。空值用""，来表示
+        // $("#loginform").submit();
+        var loadingIndex = null;
+        var rememeber
+        $.ajax({//通过jquery调用ajax来传输数据
+            type: "post",
+            url: "loginDo",
+            data: {
+                "loginaccount": loginaccount,
+                "password": password,
+                "flag": flag
+            },
+            beforeSend: function () {
+                loadingIndex = layer.msg('处理中', {icon: 16});
+            },
+            success: function (ajaxResult) {
+                layer.close(loadingIndex);//接收到返回结果关闭窗口
+                var user = ajaxResult.object;
+                if (ajaxResult.success && user.role == "会员") {//直接ajaxResult.success就行，【千万不要只打一个  =  】
+                    window.location.href = "index";//通过控制台跳转到主页面
+                }
+                else if (ajaxResult.success && user.role == "管理") {//直接ajaxResult.success就行，【千万不要只打一个  =  】
+                    window.location.href = "main";//通过控制台跳转到主页面
+                }
+                else {
+                    layer.msg("用户名或者密码错误，请重新输入！", {time: 2000, icon: 5, shift: 6}, function () {
+                    });
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

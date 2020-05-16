@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keys" content="">
+    <meta name="author" content="">
+    <!--<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css"/>
+    <script type="text/javascript" src="/static/js/jquery/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/jquery-validation/jquery.validate.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/jquery.form.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.bootstrap.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" href="index.html" style="font-size:32px;">用户注册</a></div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <form id="registerForm" class="form-horizontal el-register-form" action="registDo" method="post"
+          style="margin-left: 280px">
+        <p class="h4" style="margin: 10px 70px 20px;color:#999;">请填写注册信息，点击“提交注册”即可完成注册！</p>
+        <div class="form-group">
+            <label class="control-label col-sm-2">用户名</label>
+            <div class="col-md-4">
+                <input type="text" autocomplete="off" name="loginaccount" class="form-control" id="loginaccount"/>
+                <p class="help-block">用户名为4~16位字母，数字，符号或中文</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">密&emsp;码</label>
+            <div class="col-md-4">
+                <input type="password" autocomplete="off" name="password" id="password" class="form-control"/>
+                <p class="help-block">密码为4~16位字符组成,采用数字、字母、符号安全性更高</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">确认密码</label>
+            <div class="col-md-4">
+                <input type="password" autocomplete="off" name="confirmPwd" class="form-control"/>
+                <p class="help-block">请再次填写密码</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">电子邮箱</label>
+            <div class="col-md-4">
+                <input type="text" autocomplete="off" name="email" class="form-control" id="email"/>
+                <p class="help-block">请输入电子邮箱</p>
+            </div>
+        </div>
+        <div class="form-group has-success has-feedback col-sm-2" style="margin-left: 70px">
+            <select class="form-control" style="margin-left: -30px" name="role">
+                <option value="会员">会员</option>
+                <option value="管理">管理</option>
+            </select>
+        </div>
+        <div class="form-gorup">
+            <div class="col-sm-offset-2" style="margin-left: 20px">
+                <button type="submit" class="btn btn-success">
+                    同意协议并注册
+                </button>
+                &emsp;&emsp;
+                <a href="" class="text-primary">已有账号，马上登录</a>
+
+                <p style="padding-left: 50px;margin-top: 15px;">
+                    <a href="#">《使用协议说明书》</a>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#registerForm").validate({//加载插件
+            rules: {
+                loginaccount: {
+                    required: true,//判断值是否为空
+                    rangelength: [4, 16],
+                    remote: {
+                        url: "remoteRegistDo",
+                        type: "post"
+                    }//直接在前端输入完成后台进行验证，返回的是布尔类型
+                },//
+                password: {
+                    required: true,
+                    rangelength: [4, 20]//当布尔类型返回false时就可以输出提示消息
+                },
+                confirmPwd: {
+                    required: true,
+                    equalTo: "#password"//判断是否两次输入的密码一致
+                },
+                email: {
+                    required: true,
+                    email: "#email",
+                    remote: {
+                        url: "remoteEmailDo",
+                        type: "post"
+                    }//直接在前端输入完成后台进行验证，返回的是布尔类型
+                }
+            },
+            messages: {
+                loginaccount: {
+                    required: "请填写用户名!",
+                    rangelength: "用户名长度必须在{0}-{1}之间!",//表示跟上面一样的数据
+                    remote: "该用户名已经存在!"
+                },
+                password: {
+                    required: "请填写密码!",
+                    rangelength: "密码长度必须在{0}-{1}之间!"
+                },
+                confirmPwd: {
+                    required: "请再次确认密码",
+                    equalTo: "两次密码不一致"
+                },
+                email: {
+                    required: "请输入电子邮箱",
+                    email: "请输入正确的邮箱",
+                    remote: "该邮箱已经被注册！"
+                }
+            },
+            submitHandler: function (form) {//提交表单以ajax形式jason格式提交
+                $("#registerForm").ajaxSubmit({
+                    dataType: "json",
+                    success: function (ajaxResult) {
+                        if (ajaxResult.success) {
+                            $.messager.confirm("提示", "注册成功!", function () {
+                                window.location.href = "http://localhost:8080/";
+                            })//提示，确定后调用回调方法。
+                        } else {
+                            $.messager.popup("注册失败!")
+                        }
+                    }
+                });
+            },
+            errorClass: "text-danger",//错误的格式
+            highlight: function (element) {//配置错误之后怎么处理元素
+                $(element).closest("div.form-group").addClass("has-error");//设置错误格式的边框颜色
+            },//选择离样式为form-group的div最近的div
+            unhighlight: function (element) {
+                $(element).closest("div.form-group").removeClass("has-error");//恢复正常后移除
+            }
+        })
+    })
+</script>
+</body>
+</html>

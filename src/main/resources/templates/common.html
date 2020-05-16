@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<style>
+    a:hover {
+        color: red;
+    }
+</style>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">后台维护</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user">[[${session.user.getLoginaccount()}]]</i> <span
+                                class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/permission/loginout"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="tree">
+                <ul style="padding-left:0px;" class="list-group" th:each="permission:${session.permissions.children}">
+                    <!--遍历的是根节点的字节点，而不是本身-->
+                    <div th:if="${permission.children} == null">
+                        <li class="list-group-item tree-closed">
+                            <a th:href="${permission.getUrl()}"><i th:class="${permission.getIcon()}"></i>[[${permission.getName()}]]</a>
+                        </li>
+                    </div>
+                    <div th:if="${permission.children} != null">
+                        <li class="list-group-item tree-closed">
+                        <span><i th:class="${permission.getIcon()}"></i> [[${permission.getName()}]] <span
+                                class="badge"
+                                style="float:right">[[${permission.children.size()}]]</span></span>
+                            <ul style="margin-top:10px;">
+                                <li style="height:30px;" th:each="permissionchild:${permission.getChildren()}">
+                                    <a th:href="${permissionchild.getUrl()}"><i
+                                            th:class="${permissionchild.getIcon()}"></i>
+                                        [[${permissionchild.getName()}]]</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
